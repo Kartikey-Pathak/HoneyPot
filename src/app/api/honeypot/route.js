@@ -4,7 +4,7 @@ import { OpenRouter } from '@openrouter/sdk';
 import { HoneypotSession } from "@/models/HoneyPot";
 import { ScamCheck } from "@/lib/scamDetection";
 import { aiScamCheck } from "@/helpers/aiScamService";
-import { sendGuviCallback } from "@/helpers/guviService";
+
 
 
 connect();
@@ -41,7 +41,7 @@ export async function POST(req) {
             text: message.text,
             timestamp: new Date(message.timestamp),
         });
-             session.totalMessagesExchanged =(session.totalMessagesExchanged || 0) + 1;
+        session.totalMessagesExchanged = (session.totalMessagesExchanged || 0) + 1;
 
         //check weather scam or not...
         if (ScamCheck(message.text)) {
@@ -94,7 +94,7 @@ Keep replies short and realistic.
                 timestamp: new Date(),
             });
 
-            session.totalMessagesExchanged =(session.totalMessagesExchanged || 0) + 1;
+            session.totalMessagesExchanged = (session.totalMessagesExchanged || 0) + 1;
         }
 
         //Intelligence extraction
@@ -117,20 +117,39 @@ Keep replies short and realistic.
             session.intelligence.phoneNumbers.length > 0 ||
             session.intelligence.phishingLinks.length > 0;
 
-        if (session.scamDetected && (enoughMessages || gotIntel)) {
-            await sendGuviCallback(session);
+        const shouldStop = session.scamDetected && (enoughMessages || gotIntel);
+
+
+        // if (session.scamDetected && (enoughMessages || gotIntel)) {
+        //     await sendGuviCallback(session);
+        // }
+        // //stoping Condition....
+
+        if (session.scamDetected && shouldStop) {
+            reply = "Okay, I will check and get back to you.";
         }
-        //stoping Condition....
 
 
 
-        //saving it
+
+        // saving session
         await session.save();
 
+        // FINAL RESPONSE TO GUVI EVALUATOR
         return NextResponse.json({
             status: "success",
+            sessionId: session.sessionId,
             reply,
+            scamDetected: session.scamDetected || false,
+            totalMessagesExchanged: session.totalMessagesExchanged,
+            intelligence: {
+                upiIds: session.intelligence.upiIds,
+                phoneNumbers: session.intelligence.phoneNumbers,
+                phishingLinks: session.intelligence.phishingLinks,
+            },
+            metadata: session.metadata,
         });
+
 
 
     } catch (error) {
