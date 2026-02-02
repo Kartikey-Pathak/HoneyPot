@@ -128,7 +128,7 @@ Keep replies short and realistic.
             session.intelligence.phoneNumbers.length > 0 ||
             session.intelligence.phishingLinks.length > 0;
 
-        const shouldStop = session.scamDetected && (enoughMessages || gotIntel);
+        const shouldStop = session.scamDetected && (enoughMessages || gotIntel);  //maybe we should let ai decide the messages
 
 
         // if (session.scamDetected && (enoughMessages || gotIntel)) {
@@ -136,9 +136,9 @@ Keep replies short and realistic.
         // }
         // //stoping Condition....
 
-        if (session.scamDetected && shouldStop) {
-            reply = "Okay, I will check and get back to you.";
-        }
+        // if (session.scamDetected && shouldStop) {
+        //     reply = "Okay, I will check and get back to you.";
+        // }
 
 
 
