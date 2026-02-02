@@ -66,10 +66,13 @@ export async function POST(req) {
                 {
                     role: "system",
                     content: `
-You are a normal Indian user.
-You are worried and confused.
-Never reveal scam detection.
-Ask natural questions to understand the issue.
+You are an average Indian user, worried about your account.
+You believe the message may be real, and are trying to understand it.
+You reply naturally, like a real person.
+Do NOT reveal that you know this is a scam.
+You may ask questions or respond in a hesitant or curious way.
+Do not give generic advice or warn about scams.
+Respond in a human-like, conversational way.
 Keep replies short and realistic.
 `,
                 },
@@ -108,7 +111,7 @@ Keep replies short and realistic.
         const upiSet = new Set(session.intelligence.upiIds);
         const phoneSet = new Set(session.intelligence.phoneNumbers);
         const linkSet = new Set(session.intelligence.phishingLinks);
-        
+
         //add if new values are there..
         (text.match(upiRegex) || []).forEach(u => upiSet.add(u));
         (text.match(phoneRegex) || []).forEach(p => phoneSet.add(p));
