@@ -104,9 +104,20 @@ Keep replies short and realistic.
 
         const text = message.text;
 
-        session.intelligence.upiIds.push(...(text.match(upiRegex) || []));
-        session.intelligence.phoneNumbers.push(...(text.match(phoneRegex) || []));
-        session.intelligence.phishingLinks.push(...(text.match(linkRegex) || []));
+        //just to remove duplicates
+        const upiSet = new Set(session.intelligence.upiIds);
+        const phoneSet = new Set(session.intelligence.phoneNumbers);
+        const linkSet = new Set(session.intelligence.phishingLinks);
+        
+        //add if new values are there..
+        (text.match(upiRegex) || []).forEach(u => upiSet.add(u));
+        (text.match(phoneRegex) || []).forEach(p => phoneSet.add(p));
+        (text.match(linkRegex) || []).forEach(l => linkSet.add(l));
+
+        // Save back
+        session.intelligence.upiIds = [...upiSet];
+        session.intelligence.phoneNumbers = [...phoneSet];
+        session.intelligence.phishingLinks = [...linkSet];
 
         //stoping Condition....
 
