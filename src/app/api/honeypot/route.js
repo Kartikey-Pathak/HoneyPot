@@ -101,9 +101,9 @@ Keep replies short and realistic.
         }
 
         //Intelligence extraction
-        const upiRegex = /\b[\w.-]+@[\w]+\b/g;
-        const phoneRegex = /\+91\d{10}/g;
-        const linkRegex = /(https?:\/\/[^\s]+)/g;
+       const upiRegex = /\b[a-zA-Z0-9._-]+@[a-zA-Z]{2,}\b/g;
+        const phoneRegex = /\b(\+91[\s-]?|91[\s-]?)?[6-9]\d{9}\b/g;
+        const linkRegex = /\b((https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,})(\/\S*)?\b/g;
 
         const text = message.text;
 
